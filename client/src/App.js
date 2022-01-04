@@ -222,28 +222,43 @@ const App = (props) => {
         )
         .then((response) => {
           const articlesArray = [];
+
+          const filterWikiArticles = (value, callback) => {
+            if (
+              // filter name instances amongst returned data
+              !(
+                value.article === "Main_Page" ||
+                value.article.startsWith("Wikipedia:") ||
+                value.article.startsWith("File:") ||
+                value.article.startsWith("Special:") ||
+                value.article.startsWith("Portal:") ||
+                value.article.startsWith("Help:")
+              )
+            ) {
+              articlesArray.push({
+                name: value.article,
+              });
+            }
+            // execute callback when complete
+            if (callback) callback();
+          };
+
+          // filter articles logic
+          let itemsProcessed = 0;
           response.data.items[0].articles
             // return only top 500 (not 1000)
             .slice(0, 100)
             .forEach((item, index, array) => {
-              if (
-                // filter name instances amongst returned data
-                !(
-                  item.article === "Main_Page" ||
-                  item.article.startsWith("Wikipedia:") ||
-                  item.article.startsWith("File:") ||
-                  item.article.startsWith("Special:") ||
-                  item.article.startsWith("Portal:") ||
-                  item.article.startsWith("Help:")
-                )
-              ) {
-                articlesArray.push({
-                  name: item.article,
-                });
-              }
+              // find matching article already in MongoDB
+              filterWikiArticles(item, () => {
+                itemsProcessed++;
+                // callback
+                if (itemsProcessed === array.length) {
+                  getRandomArticle(articlesArray);
+                  setCurrentArticles(articlesArray);
+                }
+              });
             });
-          getRandomArticle(articlesArray);
-          setCurrentArticles(articlesArray);
         })
         .catch((error) => {
           console.log(error);
@@ -340,9 +355,7 @@ const App = (props) => {
               You have voted on {voteCounter} out of today's remaining{" "}
               {currentArticles.length} popular articles.
             </div>
-            <div className="h5">
-              Article stack updated daily!
-            </div>
+            <div className="h5">Article stack updated daily!</div>
             <hr />
           </header>
           <section id="article-title">
