@@ -39,8 +39,14 @@ In the 'rest-api' project directory you can run:
 
 Presuming you have Serverless framework installed, this will update the AWS Lambda functions.
 
-## NOTE:
+## NOTE 1:
 
 in the 'rest-api' folder, you will need to provide your own MongoDB string - in a variables.env file.
 
 Format 'DB=<your-connection-string>'
+
+## NOTE 2:
+
+As this is a create-react-app, I hosted it on GitHub pages using this guide:
+
+https://betterprogramming.pub/how-to-host-your-react-app-on-github-pages-for-free
