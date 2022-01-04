@@ -1,6 +1,8 @@
 # underrated-overrated
 Foray into tapping more Wikipedia API's; this time integration with serverless AWS endpoints / MongoDB.
 
+I set out to see what I could achieve with a little time off, between 28/12/21 and 04/01/22; with aim to design, code, implement, test and deploy a personal full-stack application in one week.
+
 This was the culmination of studying Wikipedia API output:
 
 https://wikitech.wikimedia.org/wiki/Analytics/AQS/Pageviews

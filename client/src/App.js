@@ -28,7 +28,7 @@ const App = (props) => {
     Swal.fire({
       icon: "error",
       title: "Something went wrong!",
-      text: "Click OK to refresh the page",
+      text: "Please click OK to refresh the page, and start again",
     }).then((result) => {
       // Reload the Page
       window.location.reload();
@@ -184,7 +184,7 @@ const App = (props) => {
         Swal.fire({
           icon: "success",
           title: "Congratulations! You made it to the end",
-          text: "Click OK to refresh the page",
+          text: "Please click OK to refresh the page, and start again",
         }).then((result) => {
           // Reload the Page
           window.location.reload();
@@ -338,7 +338,10 @@ const App = (props) => {
             <hr />
             <div className="h5">
               You have voted on {voteCounter} out of today's remaining{" "}
-              {currentArticles.length} popular articles
+              {currentArticles.length} popular articles.
+            </div>
+            <div className="h5">
+              Article stack updated daily!
             </div>
             <hr />
           </header>
