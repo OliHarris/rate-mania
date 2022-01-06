@@ -17,13 +17,6 @@ functions: # add 3 functions for CRUD
           path: articles # path will be domain.name.com/dev/articles
           method: post
           cors: true
-  getOne:
-    handler: handler.getOne
-    events:
-      - http:
-          path: articles/{id} # path will be domain.name.com/dev/articles/1
-          method: get
-          cors: true
   getAll:
     handler: handler.getAll # path will be domain.name.com/dev/articles
     events:

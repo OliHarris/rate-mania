@@ -86,95 +86,85 @@ const App = (props) => {
                 });
             }
 
-            // get MongoDB data
-            // will need to GET from MongoDB (getAll)
-            axios
-              .get(
-                `https://ts1dtr9i4e.execute-api.eu-west-1.amazonaws.com/dev/articles`
-              )
-              .then((response) => {
-                const articlesDb = response.data;
-                if (articlesDb.length) {
-                  // reset user stats
-                  setDbEntryId("");
-                  setUserTotalVotes(0);
-                  setUserUnderrated(0);
-                  setUserUnderratedPercentage(0);
-                  setUserOverrated(0);
-                  setUserOverratedPercentage(0);
+            const getAllUserData = () => {
+              // get MongoDB data
+              // will need to GET from MongoDB (getAll)
+              axios
+                .get(
+                  `https://ts1dtr9i4e.execute-api.eu-west-1.amazonaws.com/dev/articles`
+                )
+                .then((response) => {
+                  const articlesDb = response.data;
+                  if (articlesDb.length) {
+                    // reset user stats
+                    setDbEntryId("");
+                    setUserTotalVotes(0);
+                    setUserUnderrated(0);
+                    setUserUnderratedPercentage(0);
+                    setUserOverrated(0);
+                    setUserOverratedPercentage(0);
 
-                  const findArticleMatch = (value, callback) => {
-                    if (value.article_id === pageData.pageid) {
-                      setDbEntryId(value._id);
-                      // get MongoDB data based on value._id
-                      // will need to GET from MongoDB (getOne)
-                      axios
-                        .get(
-                          `https://ts1dtr9i4e.execute-api.eu-west-1.amazonaws.com/dev/articles/${value._id}`
-                        )
-                        .then((response) => {
-                          const articleUserData = response.data;
-                          setUserTotalVotes(
-                            articleUserData.underrated +
-                              articleUserData.overrated
-                          );
-                          setUserUnderrated(articleUserData.underrated);
-                          setUserUnderratedPercentage(
-                            (articleUserData.underrated /
-                              (articleUserData.underrated +
-                                articleUserData.overrated)) *
-                              100
-                          );
-                          setUserOverrated(articleUserData.overrated);
-                          setUserOverratedPercentage(
-                            (articleUserData.overrated /
-                              (articleUserData.underrated +
-                                articleUserData.overrated)) *
-                              100
-                          );
-                          // execute callback when complete
-                          if (callback) callback();
-                        })
-                        .catch((error) => {
-                          console.log(error);
-                          errorAlert();
-                        });
-                    } else {
-                      // execute callback when complete
-                      if (callback) callback();
-                    }
-                  };
-
-                  // process articles logic
-                  let itemsProcessed = 0;
-                  // if database already has values
-                  articlesDb.forEach((item, index, array) => {
-                    // find matching article already in MongoDB
-                    findArticleMatch(item, () => {
-                      itemsProcessed++;
-                      // callback
-                      if (itemsProcessed === array.length) {
-                        if (votedArticleKeyword) {
-                          setVoteCounter(voteCounter + 1);
-                          setCurrentArticles(articlesArray);
-                        }
-                        setLoadingState(false);
+                    const findArticleMatch = (value, callback) => {
+                      if (value.article_id === pageData.pageid) {
+                        setDbEntryId(value._id);
+                        setUserTotalVotes(value.underrated + value.overrated);
+                        setUserUnderrated(value.underrated);
+                        setUserUnderratedPercentage(
+                          (value.underrated /
+                            (value.underrated + value.overrated)) *
+                            100
+                        );
+                        setUserOverrated(value.overrated);
+                        setUserOverratedPercentage(
+                          (value.overrated /
+                            (value.underrated + value.overrated)) *
+                            100
+                        );
+                        // execute callback when complete
+                        if (callback) callback();
+                      } else {
+                        // execute callback when complete
+                        if (callback) callback();
                       }
+                    };
+
+                    // process articles logic
+                    let itemsProcessed = 0;
+                    // if database already has values
+                    articlesDb.forEach((item, index, array) => {
+                      // find matching article already in MongoDB
+                      findArticleMatch(item, () => {
+                        itemsProcessed++;
+                        // callback
+                        if (itemsProcessed === array.length) {
+                          if (votedArticleKeyword) {
+                            setVoteCounter(voteCounter + 1);
+                            setCurrentArticles(articlesArray);
+                          }
+                          setLoadingState(false);
+                        }
+                      });
                     });
-                  });
-                } else {
-                  // if fresh database
-                  if (votedArticleKeyword) {
-                    setVoteCounter(voteCounter + 1);
-                    setCurrentArticles(articlesArray);
+                  } else {
+                    // if fresh database
+                    if (votedArticleKeyword) {
+                      setVoteCounter(voteCounter + 1);
+                      setCurrentArticles(articlesArray);
+                    }
+                    setLoadingState(false);
                   }
-                  setLoadingState(false);
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-                errorAlert();
-              });
+                })
+                .catch((error) => {
+                  console.log(error);
+                  // AWS special error handling - try again if 500
+                  if (error.response.status === 500) {
+                    getAllUserData();
+                  } else {
+                    errorAlert();
+                  }
+                });
+            };
+            getAllUserData();
           })
           .catch((error) => {
             console.log(error);
@@ -300,7 +290,12 @@ const App = (props) => {
         })
         .catch((error) => {
           console.log(error);
-          errorAlert();
+          // AWS special errorAlert with no page refresh
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: "Please click OK to try again",
+          });
         });
     } else {
       // update entry in the database
@@ -331,7 +326,12 @@ const App = (props) => {
         })
         .catch((error) => {
           console.log(error);
-          errorAlert();
+          // AWS special errorAlert with no page refresh
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: "Please click OK to try again",
+          });
         });
     }
   };

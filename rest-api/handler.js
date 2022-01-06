@@ -14,8 +14,7 @@ module.exports.create = (event, context, callback) => {
         callback(null, {
           statusCode: 200,
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
           },
           body: JSON.stringify(article),
         })
@@ -23,33 +22,13 @@ module.exports.create = (event, context, callback) => {
       .catch((err) =>
         callback(null, {
           statusCode: err.statusCode || 500,
-          headers: { "Content-Type": "text/plain" },
-          body: "Could not create the article.",
-        })
-      );
-  });
-};
-
-module.exports.getOne = (event, context, callback) => {
-  context.callbackWaitsForEmptyEventLoop = false;
-
-  connectToDatabase().then(() => {
-    Article.findById(event.pathParameters.id)
-      .then((article) =>
-        callback(null, {
-          statusCode: 200,
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
           },
-          body: JSON.stringify(article),
-        })
-      )
-      .catch((err) =>
-        callback(null, {
-          statusCode: err.statusCode || 500,
-          headers: { "Content-Type": "text/plain" },
-          body: "Could not fetch the article.",
+          body: JSON.stringify({
+            message: "Could not create the article.",
+            error: err,
+          }),
         })
       );
   });
@@ -64,8 +43,7 @@ module.exports.getAll = (event, context, callback) => {
         callback(null, {
           statusCode: 200,
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
           },
           body: JSON.stringify(articles),
         })
@@ -73,8 +51,13 @@ module.exports.getAll = (event, context, callback) => {
       .catch((err) =>
         callback(null, {
           statusCode: err.statusCode || 500,
-          headers: { "Content-Type": "text/plain" },
-          body: "Could not fetch the articles.",
+          headers: {
+            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+          },
+          body: JSON.stringify({
+            message: "Could not fetch the articles.",
+            error: err,
+          }),
         })
       );
   });
@@ -91,8 +74,7 @@ module.exports.update = (event, context, callback) => {
         callback(null, {
           statusCode: 200,
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
           },
           body: JSON.stringify(article),
         })
@@ -100,8 +82,13 @@ module.exports.update = (event, context, callback) => {
       .catch((err) =>
         callback(null, {
           statusCode: err.statusCode || 500,
-          headers: { "Content-Type": "text/plain" },
-          body: "Could not fetch the articles.",
+          headers: {
+            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+          },
+          body: JSON.stringify({
+            message: "Could not fetch the articles.",
+            error: err,
+          }),
         })
       );
   });
