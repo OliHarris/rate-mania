@@ -59,7 +59,7 @@ const App = (props) => {
         // get Wikipedia data based on randomArticle.name
         axios
           .get(
-            `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=extracts%7Cinfo%7Cpageprops%7Cpageimages&exintro=1&inprop=url&ppprop=page_image&piprop=original&titles=${randomArticle.name}&origin=*`
+            `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&redirects=1&prop=extracts%7Cinfo%7Cpageprops%7Cpageimages&exintro=1&inprop=url&ppprop=page_image&piprop=original&titles=${randomArticle.name}&origin=*`
           )
           .then((response) => {
             const pageData = response.data.query.pages[0];
