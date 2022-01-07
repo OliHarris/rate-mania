@@ -36,7 +36,7 @@ const App = (props) => {
   };
 
   const getRandomArticle = useCallback(
-    (articlesArray, votedArticleKeyword) => {
+    (articlesArray, status, keyword) => {
       // reset article values
       setArticleId(0);
       setArticleTitle("");
@@ -46,9 +46,9 @@ const App = (props) => {
       setArticleImage("");
 
       // only after user input (need to remove article from stack)
-      if (votedArticleKeyword) {
+      if (keyword) {
         articlesArray = articlesArray.filter((obj) => {
-          return obj.name !== decodeURI(votedArticleKeyword);
+          return obj.name !== decodeURI(keyword);
         });
       }
       const randomArticle =
@@ -137,8 +137,10 @@ const App = (props) => {
                         itemsProcessed++;
                         // callback
                         if (itemsProcessed === array.length) {
-                          if (votedArticleKeyword) {
+                          if (status === 'voted') {
                             setVoteCounter(voteCounter + 1);
+                            setCurrentArticles(articlesArray);
+                          } else if (status === 'skipped') {
                             setCurrentArticles(articlesArray);
                           }
                           setLoadingState(false);
@@ -147,8 +149,10 @@ const App = (props) => {
                     });
                   } else {
                     // if fresh database
-                    if (votedArticleKeyword) {
+                    if (status === 'voted') {
                       setVoteCounter(voteCounter + 1);
+                      setCurrentArticles(articlesArray);
+                    } else if (status === 'skipped') {
                       setCurrentArticles(articlesArray);
                     }
                     setLoadingState(false);
@@ -244,7 +248,8 @@ const App = (props) => {
                 itemsProcessed++;
                 // callback
                 if (itemsProcessed === array.length) {
-                  getRandomArticle(articlesArray);
+                  console.log(articlesArray);
+                  getRandomArticle(articlesArray, null, null);
                   setCurrentArticles(articlesArray);
                 }
               });
@@ -286,7 +291,7 @@ const App = (props) => {
           newRecord
         )
         .then((response) => {
-          getRandomArticle(currentArticles, articleKeyword);
+          getRandomArticle(currentArticles, 'voted', articleKeyword);
         })
         .catch((error) => {
           console.log(error);
@@ -322,7 +327,7 @@ const App = (props) => {
           updateRecord
         )
         .then((response) => {
-          getRandomArticle(currentArticles, articleKeyword);
+          getRandomArticle(currentArticles, 'voted', articleKeyword);
         })
         .catch((error) => {
           console.log(error);
@@ -336,10 +341,10 @@ const App = (props) => {
     }
   };
 
-  // user random logic
-  const handleRandomButton = (event) => {
+  // user skip logic
+  const handleSkipButton = (event) => {
     setLoadingState(true);
-    getRandomArticle(currentArticles);
+    getRandomArticle(currentArticles, 'skipped', articleKeyword);
   };
 
   return (
@@ -418,11 +423,11 @@ const App = (props) => {
             <div className="small-12 medium-4 large-4 xlarge-2 columns">
               <button
                 className="btn"
-                onClick={(e) => handleRandomButton(e)}
-                disabled={loadingState || currentArticles.length <= 1}
-                aria-label="Random article"
+                onClick={(e) => handleSkipButton(e)}
+                disabled={loadingState || currentArticles.length === 0}
+                aria-label="Skip article"
               >
-                <span>Random</span>
+                <span>Skip</span>
                 <span>article</span>
               </button>
             </div>
