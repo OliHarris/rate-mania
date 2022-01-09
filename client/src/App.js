@@ -280,7 +280,7 @@ const App = (props) => {
                 itemsProcessed++;
                 // callback
                 if (itemsProcessed === array.length) {
-                  // review popular categories output...
+                  // if review popular categories output...
                   if (testPopularCategories) {
                     let categoryMap = combinedCategoriesArray.reduce((category, val) => {
                       return category.set(val.title, 1 + (category.get(val.title) || 0));
@@ -404,7 +404,7 @@ const App = (props) => {
             <hr />
             <div className="h5">
               You have voted on {voteCounter} out of today's remaining{" "}
-              {currentArticles.length} popular articles.
+              {currentArticles.length} popular films and television shows.
             </div>
             <div className="h5">Article stack updated daily!</div>
             <hr />
