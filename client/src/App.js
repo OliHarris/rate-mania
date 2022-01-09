@@ -41,8 +41,6 @@ const App = (props) => {
       // only after user input (need to remove article from stack)
       if (keyword) {
         articlesArray = articlesArray.filter((obj) => {
-          console.log(obj.keyword);
-          console.log(decodeURI(keyword));
           return obj.keyword !== keyword;
         });
       }
