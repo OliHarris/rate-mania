@@ -192,79 +192,110 @@ const App = (props) => {
           const testPopularCategories = false;
           const urlString = testPopularCategories
             ? "&cllimit=500"
-            : `&clcategories=${filtersString}`;
+            : `&clcategories=${encodeURIComponent(filtersString)}`;
           let combinedCategoriesArray = [];
 
-          const filterWikiArticles = (value, callback) => {
-            // get Wikipedia data based on value.article
-            axios
-              .get(
-                `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&redirects=1` +
-                  `&prop=extracts|info|pageprops|pageimages|categories` +
-                  `${urlString}` +
-                  `&exintro=1&inprop=url&ppprop=page_image&piprop=original&titles=${value.article}&origin=*`
-              )
-              .then((response) => {
-                const pageData = response.data.query.pages[0];
+          let titleArray = [];
+          // max 50, although 'extracts' start to cut out after 20
+          const apiThreshold = 20;
+          const filterWikiArticles = (value, callback1) => {
+            const getWikiData = (titlesString) => {
+              // get Wikipedia data based on titlesString
+              axios
+                .get(
+                  `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&redirects=1` +
+                    `&prop=extracts|info|pageprops|pageimages|categories` +
+                    `${urlString}` +
+                    `&exintro=1&inprop=url&ppprop=page_image&piprop=original&titles=${encodeURIComponent(
+                      titlesString
+                    )}&origin=*`
+                )
+                .then((response) => {
+                  const populateArticlesArray = (value, callback2) => {
+                    if (value.categories) {
+                      if (testPopularCategories) {
+                        combinedCategoriesArray = [
+                          ...combinedCategoriesArray,
+                          ...value.categories,
+                        ];
+                      }
 
-                if (pageData.categories) {
-                  if (testPopularCategories) {
-                    combinedCategoriesArray = [
-                      ...combinedCategoriesArray,
-                      ...pageData.categories,
-                    ];
-                  }
+                      const pushArticleData = (value, image) => {
+                        articlesArray.push({
+                          pageid: value.pageid,
+                          title: value.title,
+                          extract: value.extract,
+                          fullurl: value.fullurl,
+                          keyword: value.fullurl.split("/").pop(),
+                          image: image,
+                        });
+                      };
 
-                  const pushArticleData = (image) => {
-                    articlesArray.push({
-                      pageid: pageData.pageid,
-                      title: pageData.title,
-                      extract: pageData.extract,
-                      fullurl: pageData.fullurl,
-                      keyword: pageData.fullurl.split("/").pop(),
-                      image: image,
-                    });
+                      // sort image
+                      let dataImage;
+                      if (value.original) {
+                        dataImage = value.original.source;
+                        pushArticleData(value, dataImage);
+                        // execute callback2 when complete
+                        if (callback2) callback2();
+                      } else if (value.pageprops) {
+                        // get Wikipedia image based on pageData.pageprops.page_image
+                        axios
+                          .get(
+                            `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=imageinfo&iiprop=url&titles=File:${value.pageprops.page_image}&origin=*`
+                          )
+                          .then((response) => {
+                            const imageData = response.data.query.pages[0];
+                            if (imageData.imageinfo) {
+                              dataImage = imageData.imageinfo[0].url;
+                              pushArticleData(value, dataImage);
+                              // execute callback2 when complete
+                              if (callback2) callback2();
+                            }
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                            errorAlert();
+                          });
+                      } else {
+                        // execute callback2 when complete
+                        if (callback2) callback2();
+                      }
+                    } else {
+                      // execute callback2 when complete
+                      if (callback2) callback2();
+                    }
                   };
 
-                  // sort image
-                  let dataImage;
-                  if (pageData.original) {
-                    dataImage = pageData.original.source;
-                    pushArticleData(dataImage);
-                    // execute callback when complete
-                    if (callback) callback();
-                  } else if (pageData.pageprops) {
-                    // get Wikipedia image based on pageData.pageprops.page_image
-                    axios
-                      .get(
-                        `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=imageinfo&iiprop=url&titles=File:${pageData.pageprops.page_image}&origin=*`
-                      )
-                      .then((response) => {
-                        const imageData = response.data.query.pages[0];
-                        if (imageData.imageinfo) {
-                          dataImage = imageData.imageinfo[0].url;
-                          pushArticleData(dataImage);
-                          // execute callback when complete
-                          if (callback) callback();
-                        }
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                        errorAlert();
-                      });
-                  } else {
-                    // execute callback when complete
-                    if (callback) callback();
-                  }
-                } else {
-                  // execute callback when complete
-                  if (callback) callback();
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-                errorAlert();
-              });
+                  // filter pages logic
+                  let itemsProcessed = 0;
+                  response.data.query.pages.forEach((item, index, array) => {
+                    // fill articlesArray with data
+                    populateArticlesArray(item, () => {
+                      itemsProcessed++;
+                      // callback
+                      if (itemsProcessed === array.length) {
+                        // execute callback1 when complete
+                        if (callback1) callback1();
+                      }
+                    });
+                  });
+                })
+                .catch((error) => {
+                  console.log(error);
+                  errorAlert();
+                });
+            };
+
+            // reset array every selection of titles based on apiThreshold
+            if (titleArray.length === apiThreshold) {
+              titleArray = [];
+            }
+            titleArray.push(value.article);
+            // when titleArray ready then getWikiData
+            if (titleArray.length === apiThreshold) {
+              getWikiData(titleArray.join("|"));
+            }
           };
 
           // filter articles logic
@@ -273,16 +304,23 @@ const App = (props) => {
             // return only top 100 (not 1000)
             // .slice(0, 100)
             .forEach((item, index, array) => {
-              // find matching article already in MongoDB
+              // filter received top Wikipedia articles
               filterWikiArticles(item, () => {
                 itemsProcessed++;
                 // callback
-                if (itemsProcessed === array.length) {
+                const totalItemsProcessed = (itemsProcessed + 1) * apiThreshold;
+                if (totalItemsProcessed === array.length) {
                   // if review popular categories output...
                   if (testPopularCategories) {
-                    let categoryMap = combinedCategoriesArray.reduce((category, val) => {
-                      return category.set(val.title, 1 + (category.get(val.title) || 0));
-                    }, new Map());
+                    let categoryMap = combinedCategoriesArray.reduce(
+                      (category, val) => {
+                        return category.set(
+                          val.title,
+                          1 + (category.get(val.title) || 0)
+                        );
+                      },
+                      new Map()
+                    );
                     const array = Array.from(categoryMap, ([name, value]) => ({
                       name,
                       value,
