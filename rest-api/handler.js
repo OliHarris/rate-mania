@@ -14,7 +14,11 @@ module.exports.create = (event, context, callback) => {
         callback(null, {
           statusCode: 200,
           headers: {
-            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+            // ternary for CORS support to work
+            "Access-Control-Allow-Origin":
+              event.requestContext.stage === "dev"
+                ? "*"
+                : "https://oliharris.github.io",
           },
           body: JSON.stringify(article),
         })
@@ -23,7 +27,11 @@ module.exports.create = (event, context, callback) => {
         callback(null, {
           statusCode: err.statusCode || 500,
           headers: {
-            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+            // ternary for CORS support to work
+            "Access-Control-Allow-Origin":
+              event.requestContext.stage === "dev"
+                ? "*"
+                : "https://oliharris.github.io",
           },
           body: JSON.stringify({
             message: "Could not create the article.",
@@ -43,7 +51,11 @@ module.exports.getAll = (event, context, callback) => {
         callback(null, {
           statusCode: 200,
           headers: {
-            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+            // ternary for CORS support to work
+            "Access-Control-Allow-Origin":
+              event.requestContext.stage === "dev"
+                ? "*"
+                : "https://oliharris.github.io",
           },
           body: JSON.stringify(articles),
         })
@@ -52,7 +64,11 @@ module.exports.getAll = (event, context, callback) => {
         callback(null, {
           statusCode: err.statusCode || 500,
           headers: {
-            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+            // ternary for CORS support to work
+            "Access-Control-Allow-Origin":
+              event.requestContext.stage === "dev"
+                ? "*"
+                : "https://oliharris.github.io",
           },
           body: JSON.stringify({
             message: "Could not fetch the articles.",
@@ -74,7 +90,11 @@ module.exports.update = (event, context, callback) => {
         callback(null, {
           statusCode: 200,
           headers: {
-            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+            // ternary for CORS support to work
+            "Access-Control-Allow-Origin":
+              event.requestContext.stage === "dev"
+                ? "*"
+                : "https://oliharris.github.io",
           },
           body: JSON.stringify(article),
         })
@@ -83,7 +103,11 @@ module.exports.update = (event, context, callback) => {
         callback(null, {
           statusCode: err.statusCode || 500,
           headers: {
-            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+            // ternary for CORS support to work
+            "Access-Control-Allow-Origin":
+              event.requestContext.stage === "dev"
+                ? "*"
+                : "https://oliharris.github.io",
           },
           body: JSON.stringify({
             message: "Could not fetch the articles.",
