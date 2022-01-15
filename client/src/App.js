@@ -44,6 +44,14 @@ const App = (props) => {
 
   const getRandomArticle = useCallback(
     (articlesArray, status, keyword) => {
+      // reset article values
+      setArticleId(0);
+      setArticleTitle("");
+      setArticleExtract("");
+      setArticleFullUrl("");
+      setArticleKeyword("");
+      setArticleImage("");
+
       // only after user input (need to remove article from stack)
       if (keyword) {
         articlesArray = articlesArray.filter((obj) => {
