@@ -25,6 +25,12 @@ const App = (props) => {
   const [dbEntryId, setDbEntryId] = useState("");
   const [loadingState, setLoadingState] = useState(true);
 
+  const devSwitch = () => {
+    return window.location.hostname === "localhost"
+      ? "https://ts1dtr9i4e.execute-api.eu-west-1.amazonaws.com/dev"
+      : "https://vmi0yofalk.execute-api.eu-west-1.amazonaws.com/prod";
+  };
+
   const errorAlert = () => {
     Swal.fire({
       icon: "error",
@@ -60,9 +66,7 @@ const App = (props) => {
           // get MongoDB data
           // will need to GET from MongoDB (getAll)
           axios
-            .get(
-              `https://ts1dtr9i4e.execute-api.eu-west-1.amazonaws.com/dev/articles`
-            )
+            .get(`${devSwitch()}/articles`)
             .then((response) => {
               const articlesDb = response.data;
               if (articlesDb.length) {
@@ -369,7 +373,7 @@ const App = (props) => {
       // will need to POST to MongoDB (create)
       axios
         .post(
-          `https://ts1dtr9i4e.execute-api.eu-west-1.amazonaws.com/dev/articles`,
+          `${devSwitch()}/articles`,
           newRecord
         )
         .then((response) => {
@@ -405,7 +409,7 @@ const App = (props) => {
       // will need to PUT to MongoDB (update)
       axios
         .put(
-          `https://ts1dtr9i4e.execute-api.eu-west-1.amazonaws.com/dev/articles/${dbEntryId}`,
+          `${devSwitch()}/articles/${dbEntryId}`,
           updateRecord
         )
         .then((response) => {
