@@ -22,7 +22,7 @@ const App = (props) => {
   const [userUnderratedPercentage, setUserUnderratedPercentage] = useState(0);
   const [userOverratedPercentage, setUserOverratedPercentage] = useState(0);
 
-  const [dbEntryId, setDbEntryId] = useState("");
+  const [dbEntryExists, setDbEntryExists] = useState(false);
   const [loadingState, setLoadingState] = useState(true);
 
   const devSwitch = () => {
@@ -72,72 +72,44 @@ const App = (props) => {
 
         const getAllUserData = () => {
           // get MongoDB data
-          // will need to GET from MongoDB (getAll)
+          // will need to GET from MongoDB (getOne)
           axios
-            .get(`${devSwitch()}/articles`)
+            .get(`${devSwitch()}/articles/${randomArticle.pageid}`)
             .then((response) => {
-              const articlesDb = response.data;
-              if (articlesDb.length) {
-                // reset user stats
-                setDbEntryId("");
+              const dbArticle = response.data;
+              if (dbArticle) {
+                // if article in DB
+                setDbEntryExists(true);
+                setUserTotalVotes(dbArticle.underrated + dbArticle.overrated);
+                setUserUnderrated(dbArticle.underrated);
+                setUserUnderratedPercentage(
+                  (dbArticle.underrated /
+                    (dbArticle.underrated + dbArticle.overrated)) *
+                    100
+                );
+                setUserOverrated(dbArticle.overrated);
+                setUserOverratedPercentage(
+                  (dbArticle.overrated /
+                    (dbArticle.underrated + dbArticle.overrated)) *
+                    100
+                );
+              } else {
+                // if no article in DB
+                setDbEntryExists(false);
                 setUserTotalVotes(0);
                 setUserUnderrated(0);
                 setUserUnderratedPercentage(0);
                 setUserOverrated(0);
                 setUserOverratedPercentage(0);
-
-                const findArticleMatch = (value, callback) => {
-                  if (value.article_id === randomArticle.pageid) {
-                    setDbEntryId(value._id);
-                    setUserTotalVotes(value.underrated + value.overrated);
-                    setUserUnderrated(value.underrated);
-                    setUserUnderratedPercentage(
-                      (value.underrated /
-                        (value.underrated + value.overrated)) *
-                        100
-                    );
-                    setUserOverrated(value.overrated);
-                    setUserOverratedPercentage(
-                      (value.overrated / (value.underrated + value.overrated)) *
-                        100
-                    );
-                    // execute callback when complete
-                    if (callback) callback();
-                  } else {
-                    // execute callback when complete
-                    if (callback) callback();
-                  }
-                };
-
-                // process articles logic
-                let itemsProcessed = 0;
-                // if database already has values
-                articlesDb.forEach((item, index, array) => {
-                  // find matching article already in MongoDB
-                  findArticleMatch(item, () => {
-                    itemsProcessed++;
-                    // callback
-                    if (itemsProcessed === array.length) {
-                      if (status === "voted") {
-                        setVoteCounter(voteCounter + 1);
-                        setCurrentArticles(articlesArray);
-                      } else if (status === "skipped") {
-                        setCurrentArticles(articlesArray);
-                      }
-                      setLoadingState(false);
-                    }
-                  });
-                });
-              } else {
-                // if fresh database
-                if (status === "voted") {
-                  setVoteCounter(voteCounter + 1);
-                  setCurrentArticles(articlesArray);
-                } else if (status === "skipped") {
-                  setCurrentArticles(articlesArray);
-                }
-                setLoadingState(false);
               }
+
+              if (status === "voted") {
+                setVoteCounter(voteCounter + 1);
+                setCurrentArticles(articlesArray);
+              } else if (status === "skipped") {
+                setCurrentArticles(articlesArray);
+              }
+              setLoadingState(false);
             })
             .catch((error) => {
               console.log(error);
@@ -360,7 +332,7 @@ const App = (props) => {
   const handleVoteButton = (event, type) => {
     setLoadingState(true);
 
-    if (!dbEntryId) {
+    if (!dbEntryExists) {
       // add a new entry to the database
       let newRecord;
       if (type === "underrated") {
@@ -380,10 +352,7 @@ const App = (props) => {
       }
       // will need to POST to MongoDB (create)
       axios
-        .post(
-          `${devSwitch()}/articles`,
-          newRecord
-        )
+        .post(`${devSwitch()}/articles`, newRecord)
         .then((response) => {
           getRandomArticle(currentArticles, "voted", articleKeyword);
         })
@@ -416,10 +385,7 @@ const App = (props) => {
       }
       // will need to PUT to MongoDB (update)
       axios
-        .put(
-          `${devSwitch()}/articles/${dbEntryId}`,
-          updateRecord
-        )
+        .put(`${devSwitch()}/articles/${articleId}`, updateRecord)
         .then((response) => {
           getRandomArticle(currentArticles, "voted", articleKeyword);
         })

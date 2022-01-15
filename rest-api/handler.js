@@ -42,12 +42,12 @@ module.exports.create = (event, context, callback) => {
   });
 };
 
-module.exports.getAll = (event, context, callback) => {
+module.exports.getOne = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   connectToDatabase().then(() => {
-    Article.find()
-      .then((articles) =>
+    Article.findOne({ article_id: event.pathParameters.id })
+      .then((article) =>
         callback(null, {
           statusCode: 200,
           headers: {
@@ -57,7 +57,7 @@ module.exports.getAll = (event, context, callback) => {
                 ? "*"
                 : "https://oliharris.github.io",
           },
-          body: JSON.stringify(articles),
+          body: JSON.stringify(article),
         })
       )
       .catch((err) =>
@@ -71,7 +71,7 @@ module.exports.getAll = (event, context, callback) => {
                 : "https://oliharris.github.io",
           },
           body: JSON.stringify({
-            message: "Could not fetch the articles.",
+            message: "Could not fetch the article.",
             error: err,
           }),
         })
@@ -83,9 +83,13 @@ module.exports.update = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   connectToDatabase().then(() => {
-    Article.findByIdAndUpdate(event.pathParameters.id, JSON.parse(event.body), {
-      new: true,
-    })
+    Article.findOneAndUpdate(
+      { article_id: event.pathParameters.id },
+      JSON.parse(event.body),
+      {
+        new: true,
+      }
+    )
       .then((article) =>
         callback(null, {
           statusCode: 200,

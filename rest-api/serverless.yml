@@ -5,7 +5,7 @@ provider:
   runtime: nodejs14.x # set node.js runtime
   memorySize: 128 # set the maximum memory of the Lambdas in Megabytes
   timeout: 10 # the timeout is 10 seconds (default is 6 seconds)
-  stage: prod # setting the env stage to dev or prod, this will be visible in the routes
+  stage: dev # setting the env stage to dev or prod, this will be visible in the routes
   region: eu-west-1
   lambdaHashingVersion: 20200924
 
@@ -17,13 +17,13 @@ functions: # add 3 functions for CRUD
           path: articles # path will be domain.name.com/dev/articles
           method: post
           cors: true
-  getAll:
-    handler: handler.getAll # path will be domain.name.com/dev/articles
+  getOne:
+    handler: handler.getOne
     events:
-     - http:
-         path: articles
-         method: get
-         cors: true          
+      - http:
+          path: articles/{id} # path will be domain.name.com/dev/articles/1
+          method: get
+          cors: true        
   update:
     handler: handler.update # path will be domain.name.com/dev/articles/1
     events:
