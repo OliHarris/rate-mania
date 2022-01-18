@@ -141,6 +141,15 @@ const App = (props) => {
     if (firstLoad === true) {
       setFirstLoad(false);
 
+      // initalise shine effect
+      document
+      .querySelectorAll("#user-input .btn-yellow")
+      .forEach((item, index, array) => {
+        setInterval(() => {
+          item.classList.toggle("shine");
+        }, 1000);
+      });
+
       const date = new Date();
       // extract date from one day ago
       date.setDate(date.getDate() - 1);

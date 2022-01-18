@@ -441,6 +441,11 @@ body {
     padding: 10px 10px;
     text-align: center;
     transition: all 0.25s ease;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
 
     &:not(:disabled) {
       opacity: 1;
@@ -452,9 +457,43 @@ body {
   .swal2-styled {
     &:not(:disabled) {
       background-color: $yellow;
-      border: 2px solid $yellow;
+      border: 2px solid $dark-yellow;
       color: $black;
     }
+  }
+
+  // shine effect
+  .btn-yellow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-yellow:after {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -200%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.5);
+    background: linear-gradient(
+      to right, 
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.13) 77%,
+      rgba(255, 255, 255, 0.5) 92%,
+      rgba(255, 255, 255, 0.0) 100%
+    );
+    opacity: 0;
+    transform: rotate(25deg);
+  }
+  
+  .btn-yellow.shine:after {
+    top: -50%;
+    left: 100%;
+    opacity: 1;
+    transition-property: left, top, opacity;
+    transition-duration: 2s, 2s, 0.5s;
+    transition-timing-function: ease;
   }
 }
 
