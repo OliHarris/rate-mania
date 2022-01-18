@@ -182,6 +182,18 @@ const App = (props) => {
           let titleArray = [];
           // max 50, although 'extracts' start to cut out after 20
           const apiThreshold = 20;
+
+          // error handle - response needs be 1000 articles
+          const responseArray = response.data.items[0].articles;
+          if (responseArray.length !== 1000) {
+            const totalEmptyEmtries = 1000 - responseArray.length;
+            for (let i = 0; i < totalEmptyEmtries; i++) {
+              responseArray.push({
+                article: undefined
+              });
+            }
+          }
+
           const filterWikiArticles = (value, callback1) => {
             const getWikiData = (titlesString) => {
               // get Wikipedia data based on titlesString
@@ -284,7 +296,7 @@ const App = (props) => {
 
           // filter articles logic
           let itemsProcessed = 0;
-          response.data.items[0].articles
+          responseArray
             // return only top 100 (not 1000)
             // .slice(0, 100)
             .forEach((item, index, array) => {
