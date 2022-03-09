@@ -3,11 +3,17 @@ import axios from "axios";
 import "./App.scss";
 import Swal from "sweetalert2/src/sweetalert2.js";
 
+import mobileShareImage from "./images/mobile.svg";
+import twitterShareImage from "./images/twitter.svg";
+import copyImage from "./images/copy.svg";
+
 const App = (props) => {
   const [firstLoad, setFirstLoad] = useState(true);
   const [currentArticles, setCurrentArticles] = useState([]);
   const [currentFilters, setCurrentFilters] = useState([]);
   const [voteCounter, setVoteCounter] = useState(0);
+  const [lastVotedArticleTitle, setLastVotedArticleTitle] = useState("");
+  const [lastVotedArticleType, setLastVotedArticleType] = useState("");
 
   const [articleId, setArticleId] = useState(0);
   const [articleTitle, setArticleTitle] = useState("");
@@ -40,6 +46,14 @@ const App = (props) => {
       // Reload the Page
       window.location.reload();
     });
+  };
+
+  const checkMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+      ? true
+      : false;
   };
 
   const getRandomArticle = useCallback(
@@ -143,18 +157,18 @@ const App = (props) => {
 
       // initalise shine effect
       document
-      .querySelectorAll("#user-input .btn-yellow")
-      .forEach((item, index, array) => {
-        setInterval(() => {
-          item.classList.toggle("shine");
-        }, 1000);
-      });
+        .querySelectorAll("#user-input .btn-yellow")
+        .forEach((item, index, array) => {
+          setInterval(() => {
+            item.classList.toggle("shine");
+          }, 1000);
+        });
 
       const date = new Date();
-      // extract date from one day ago
+      // extract date from one day ago (buffer)
       date.setDate(date.getDate() - 1);
-      // rewind one more hour (always data to pull at midnight)
-      date.setHours(date.getHours() - 1);
+      // rewind 12 hours (more buffer - always data to pull at midnight)
+      date.setHours(date.getHours() - 12);
       const options = {
         weekday: undefined,
         year: "numeric",
@@ -195,10 +209,10 @@ const App = (props) => {
           // error handle - response needs be 1000 articles
           const responseArray = response.data.items[0].articles;
           if (responseArray.length !== 1000) {
-            const totalEmptyEmtries = 1000 - responseArray.length;
-            for (let i = 0; i < totalEmptyEmtries; i++) {
+            const totalEmptyEntries = 1000 - responseArray.length;
+            for (let i = 0; i < totalEmptyEntries; i++) {
               responseArray.push({
-                article: undefined
+                article: undefined,
               });
             }
           }
@@ -256,6 +270,9 @@ const App = (props) => {
                               pushArticleData(value, dataImage);
                               // execute callback2 when complete
                               if (callback2) callback2();
+                            } else {
+                              // execute callback2 when complete
+                              if (callback2) callback2();
                             }
                           })
                           .catch((error) => {
@@ -306,14 +323,14 @@ const App = (props) => {
           // filter articles logic
           let itemsProcessed = 0;
           responseArray
-            // return only top 100 (not 1000)
+            // test - return only top 100 (not 1000)
             // .slice(0, 100)
             .forEach((item, index, array) => {
               // filter received top Wikipedia articles
               filterWikiArticles(item, () => {
                 itemsProcessed++;
                 // callback
-                const totalItemsProcessed = (itemsProcessed + 1) * apiThreshold;
+                const totalItemsProcessed = itemsProcessed * apiThreshold;
                 if (totalItemsProcessed === array.length) {
                   // if review popular categories output...
                   if (testPopularCategories) {
@@ -349,6 +366,40 @@ const App = (props) => {
     }
   }, [getRandomArticle, firstLoad]);
 
+  // user share logic
+  const handleShareButton = (event, type) => {
+    const shareUrl = "rate-mania.com";
+    const getShareText = () => {
+      let shareText = `I voted "${lastVotedArticleTitle}" is ${lastVotedArticleType}!\n`;
+      if (lastVotedArticleType === "underrated") {
+        shareText = `${shareText.concat("👍")}\n`;
+      } else if (lastVotedArticleType === "overrated") {
+        shareText = `${shareText.concat("👎")}\n`;
+      }
+      return shareText;
+    };
+
+    if (type === "mobile") {
+      const shareData = {
+        title: shareUrl,
+        text: getShareText(),
+        url: `https://${shareUrl}`,
+      };
+      navigator.share(shareData);
+    } else if (type === "twitter") {
+      const shareText = encodeURIComponent(getShareText());
+      const twitterLink = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
+      window.open(twitterLink, "_blank");
+    } else if (type === "copy") {
+      navigator.clipboard.writeText(`${getShareText()}\n${shareUrl}`);
+      Swal.fire({
+        icon: "success",
+        title: "Copied to clipboard",
+        text: getShareText(),
+      });
+    }
+  };
+
   // user vote logic
   const handleVoteButton = (event, type) => {
     setLoadingState(true);
@@ -375,6 +426,8 @@ const App = (props) => {
       axios
         .post(`${devSwitch()}/articles`, newRecord)
         .then((response) => {
+          setLastVotedArticleTitle(articleTitle);
+          setLastVotedArticleType(type);
           getRandomArticle(currentArticles, "voted", articleKeyword);
         })
         .catch((error) => {
@@ -408,6 +461,8 @@ const App = (props) => {
       axios
         .put(`${devSwitch()}/articles/${articleId}`, updateRecord)
         .then((response) => {
+          setLastVotedArticleTitle(articleTitle);
+          setLastVotedArticleType(type);
           getRandomArticle(currentArticles, "voted", articleKeyword);
         })
         .catch((error) => {
@@ -434,9 +489,63 @@ const App = (props) => {
         <div className="small-12 columns">
           <header>
             <h1>
-              Welcome to<span>Underrated - Overrated</span>
+              Welcome to<span>Rate-Mania.com</span>
             </h1>
             <hr />
+            {lastVotedArticleTitle && lastVotedArticleType && (
+              <>
+                <section id="share-buttons">
+                  <div className="h5">
+                    Share that you think "{lastVotedArticleTitle}" is{" "}
+                    {lastVotedArticleType}?
+                  </div>
+                  <div className="show-buttons">
+                    {checkMobileDevice() && (
+                      <button
+                        id="mobile-share"
+                        onClick={(e) => handleShareButton(e, "mobile")}
+                        title="Share on mobile"
+                      >
+                        <figure>
+                          <img
+                            className="svg"
+                            src={mobileShareImage}
+                            alt="Mobile share icon"
+                          />
+                        </figure>
+                      </button>
+                    )}
+                    <button
+                      id="twitter-share"
+                      onClick={(e) => handleShareButton(e, "twitter")}
+                      title="Share to Twitter"
+                    >
+                      <figure>
+                        <img
+                          className="svg"
+                          src={twitterShareImage}
+                          alt="Twitter share icon"
+                        />
+                      </figure>
+                    </button>
+                    <button
+                      id="clipboard-copy"
+                      onClick={(e) => handleShareButton(e, "copy")}
+                      title="Copy to clipboard"
+                    >
+                      <figure>
+                        <img
+                          className="svg"
+                          src={copyImage}
+                          alt="Clipboard copy icon"
+                        />
+                      </figure>
+                    </button>
+                  </div>
+                </section>
+                <hr />
+              </>
+            )}
             <div className="h5">
               You have voted on {voteCounter} out of today's remaining{" "}
               {currentArticles.length} popular films and television shows.
@@ -542,17 +651,7 @@ const App = (props) => {
           <section id="credits">
             <p>
               All design and implementation
-              <span>
-                &copy;{" "}
-                <a
-                  href="http://github.com/oliharris"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Oliver Harris
-                </a>
-                , 2022
-              </span>
+              <span>&copy; Oliver Harris, 2022</span>
             </p>
           </section>
         </div>

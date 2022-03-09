@@ -132,6 +132,12 @@ img {
   -ms-interpolation-mode: bicubic;
 }
 
+svg,
+.svg {
+  width: inherit;
+  height: inherit;
+}
+
 /* -----------------------------------------------
 :: Float clearing
 -------------------------------------------------- */
@@ -544,6 +550,41 @@ header .h5 {
   text-align: center;
 }
 
+header #share-buttons {
+  .show-buttons {
+    text-align: center;
+    button {
+      border-radius: 12px;
+      margin: 0 8px;
+      padding: 0;
+      height: 40px;
+      width: 40px;
+      border: none;
+      cursor: pointer;
+      figure {
+        height: 40px;
+        width: 40px;
+      }
+    }
+    #mobile-share,
+    #clipboard-copy {
+      background-color: $dark-yellow;
+      figure {
+        padding: 0 8px;
+      }
+    }
+    #facebook-share {
+      background-color: #4267b2;
+    }
+    #twitter-share {
+      background-color: #1da1f2;
+    }
+    #whatsapp-share {
+      background-color: #25D366;
+    }
+  }
+}
+
 /* -----------------------------------------------
 :: #article-title
 -------------------------------------------------- */
@@ -636,6 +677,15 @@ header .h5 {
   /*
 	min-width:480px - iPhone landscape - medium-grid;
 	*/
+  h1 span {
+    &:before {
+      content: "\1F44D\00a0";
+    }
+    &:after {
+      content: "\00a0\1F44E";
+    }
+  }
+
   #user-input > .columns:nth-of-type(2) {
     float: right;
   }
