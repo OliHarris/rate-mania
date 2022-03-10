@@ -57,6 +57,8 @@ This was then migrated over to Firebase after purchasing a URL from Google Domai
 
 https://medium.com/swlh/how-to-deploy-a-react-app-with-firebase-hosting-98063c5bf425
 
+I then updated ther custom domain details from Firebase, back to Google Domains DNS custom records.
+
 To deploy I manually run:
 
 ### `firebase deploy`
