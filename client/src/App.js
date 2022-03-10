@@ -140,7 +140,7 @@ const App = (props) => {
         Swal.fire({
           icon: "success",
           title: "Congratulations! You made it to the end",
-          text: "Please click OK to refresh the page, and start again",
+          text: "Please click OK to start again",
         }).then((result) => {
           // Reload the Page
           window.location.reload();
