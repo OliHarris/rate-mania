@@ -380,7 +380,7 @@ const App = (props) => {
 
   // user share logic
   const handleShareButton = (event, type) => {
-    const shareUrl = "rate-mania.com";
+    const shareUrl = "https://rate-mania.com";
     const getShareText = () => {
       let shareText = `I voted "${lastVotedArticleTitle}" is ${lastVotedArticleType}!\n`;
       if (lastVotedArticleType === "underrated") {
@@ -393,9 +393,9 @@ const App = (props) => {
 
     if (type === "mobile") {
       const shareData = {
-        title: shareUrl,
+        title: "Check out Rate-Mania.com",
         text: getShareText(),
-        url: `https://${shareUrl}`,
+        url: shareUrl,
       };
       navigator.share(shareData);
     } else if (type === "twitter") {
