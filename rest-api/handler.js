@@ -18,7 +18,7 @@ module.exports.create = (event, context, callback) => {
             "Access-Control-Allow-Origin":
               event.requestContext.stage === "dev"
                 ? "*"
-                : "https://oliharris.github.io",
+                : "https://rate-mania.com",
           },
           body: JSON.stringify(article),
         })
@@ -31,7 +31,7 @@ module.exports.create = (event, context, callback) => {
             "Access-Control-Allow-Origin":
               event.requestContext.stage === "dev"
                 ? "*"
-                : "https://oliharris.github.io",
+                : "https://rate-mania.com",
           },
           body: JSON.stringify({
             message: "Could not create the article.",
@@ -55,7 +55,7 @@ module.exports.getOne = (event, context, callback) => {
             "Access-Control-Allow-Origin":
               event.requestContext.stage === "dev"
                 ? "*"
-                : "https://oliharris.github.io",
+                : "https://rate-mania.com",
           },
           body: JSON.stringify(article),
         })
@@ -68,7 +68,7 @@ module.exports.getOne = (event, context, callback) => {
             "Access-Control-Allow-Origin":
               event.requestContext.stage === "dev"
                 ? "*"
-                : "https://oliharris.github.io",
+                : "https://rate-mania.com",
           },
           body: JSON.stringify({
             message: "Could not fetch the article.",
@@ -98,7 +98,7 @@ module.exports.update = (event, context, callback) => {
             "Access-Control-Allow-Origin":
               event.requestContext.stage === "dev"
                 ? "*"
-                : "https://oliharris.github.io",
+                : "https://rate-mania.com",
           },
           body: JSON.stringify(article),
         })
@@ -111,7 +111,7 @@ module.exports.update = (event, context, callback) => {
             "Access-Control-Allow-Origin":
               event.requestContext.stage === "dev"
                 ? "*"
-                : "https://oliharris.github.io",
+                : "https://rate-mania.com",
           },
           body: JSON.stringify({
             message: "Could not fetch the articles.",
