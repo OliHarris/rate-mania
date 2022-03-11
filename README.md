@@ -24,11 +24,11 @@ In the 'client' project directory you can run:
 
 Will perform a usual installation of any dependencies.
 
-### `npm start`
+### `npm run start`
 
 Will perform a usual launch of the dev environment.
 
-### `npm build`
+### `npm run build`
 
 Will perform a usual package of the build folder, ready for deployment.
 

@@ -33,16 +33,28 @@
       property="og:image"
       content="https://rate-mania.com/images/fb-logo.jpg"
     />
-    <meta
-      property="og:url"
-      content="https://rate-mania.com/"
-    />
+    <meta property="og:url" content="https://rate-mania.com/" />
     <meta property="og:description" content="Article stack updated daily!" />
     <meta property="og:site_name" content="Rate-Mania.com" />
 
     <!-- for Twitter -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:creator" content="@enginebreath" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-MFDMRJYHV7"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-MFDMRJYHV7");
+    </script>
 
     <link rel="canonical" href="https://rate-mania.com/" />
   </head>
