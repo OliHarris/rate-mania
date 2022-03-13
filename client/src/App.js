@@ -405,9 +405,11 @@ const App = (props) => {
     } else if (type === "copy") {
       navigator.clipboard.writeText(`${getShareText()}\n${shareUrl}`);
       Swal.fire({
-        icon: "success",
         title: "Copied to clipboard",
         text: getShareText(),
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
       });
     }
   };
