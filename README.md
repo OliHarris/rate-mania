@@ -1,4 +1,5 @@
 # rate-mania
+
 Foray into tapping more Wikipedia API's; this time integration with serverless AWS endpoints / MongoDB.
 
 I set out to see what I could achieve with a little time off, between 28/12/21 and 04/01/22; with aim to design, code, implement, test and deploy a personal full-stack application in one week.
@@ -15,7 +16,6 @@ https://www.mongodb.com/languages/mern-stack-tutorial
 
 https://hackernoon.com/building-a-serverless-rest-api-with-node-js-and-mongodb-2e0ed0638f47
 
-
 ## Available Scripts 1
 
 In the 'client' project directory you can run:
@@ -31,7 +31,6 @@ Will perform a usual launch of the dev environment.
 ### `npm run build`
 
 Will perform a usual package of the build folder, ready for deployment.
-
 
 ## Available Scripts 2
 
@@ -59,6 +58,6 @@ https://medium.com/swlh/how-to-deploy-a-react-app-with-firebase-hosting-98063c5b
 
 I then updated the custom domain details from Firebase, back to Google Domains DNS custom records; hence linking my purchased URL with the hosted site.
 
-To deploy I manually run:
+To deploy I manually run from the 'client' project directory:
 
 ### `firebase deploy`
