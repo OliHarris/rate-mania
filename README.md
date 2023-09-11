@@ -46,11 +46,7 @@ Format 'DB=<your-connection-string>'
 
 ## NOTE 2:
 
-As this is a create-react-app, I originally hosted it on GitHub pages using this guide:
-
-https://betterprogramming.pub/how-to-host-your-react-app-on-github-pages-for-free-919ad201a4cb
-
-This was then migrated over to Firebase after purchasing a URL from Google Domains, and navigating my way through the Firebase Hosting CLI. This was a useful guide:
+This work is migrated over to Firebase after purchasing a URL from Google Domains, and navigating my way through the Firebase Hosting CLI. This was a useful guide:
 
 https://medium.com/swlh/how-to-deploy-a-react-app-with-firebase-hosting-98063c5bf425
 
