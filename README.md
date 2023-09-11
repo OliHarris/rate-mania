@@ -48,7 +48,7 @@ Format 'DB=<your-connection-string>'
 
 This work is migrated over to Firebase after purchasing a URL from Google Domains, and navigating my way through the Firebase Hosting CLI. This was a useful guide:
 
-https://medium.com/swlh/how-to-deploy-a-react-app-with-firebase-hosting-98063c5bf425
+https://medium.com/@rajdeepmallick999/vite-firebase-how-to-deploy-react-app-5e5090730147
 
 I then updated the custom domain details from Firebase, back to Google Domains DNS custom records; hence linking my purchased URL with the hosted site.
 
