@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'SST W20 Light';
+  font-weight: normal;
+  font-style: normal;
+  src: url('./assets/fonts/SST/SST-W20-Light.ttf'); /* IE9 Compat Modes */
+  src: local('SST W20 Light'), local('SST W20 Light'),
+    url('./assets/fonts/SST/SST-W20-Light.ttf?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('./assets/fonts/SST/SST-W20-Light.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: 'SST W20 Medium';
+  font-weight: normal;
+  font-style: normal;
+  src: url('./assets/fonts/SST/SST-W20-Medium.ttf'); /* IE9 Compat Modes */
+  src: local('SST W20 Medium'), local('SST W20 Medium'),
+    url('./assets/fonts/SST/SST-W20-Medium.ttf?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('./assets/fonts/SST/SST-W20-Medium.ttf') format('truetype'); /* Safari, Android, iOS */
+}

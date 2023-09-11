@@ -1,5 +1,7 @@
 # rate-mania
 
+:heavy_check_mark: Code in pure React / TypeScript
+
 Foray into tapping more Wikipedia API's; this time integration with serverless AWS endpoints / MongoDB.
 
 I set out to see what I could achieve with a little time off, between 28/12/21 and 04/01/22; with aim to design, code, implement, test and deploy a personal full-stack application in one week.
@@ -24,13 +26,9 @@ In the 'client' project directory you can run:
 
 Will perform a usual installation of any dependencies.
 
-### `npm run start`
+### `npm run dev`
 
 Will perform a usual launch of the dev environment.
-
-### `npm run build`
-
-Will perform a usual package of the build folder, ready for deployment.
 
 ## Available Scripts 2
 
