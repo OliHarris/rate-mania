@@ -40,7 +40,7 @@ Presuming you have Serverless framework installed, this will update the AWS Lamb
 
 ## NOTE 1:
 
-in the 'rest-api' folder, you will need to provide your own MongoDB string - in a variables.env file.
+In the 'rest-api' folder, you will need to provide your own MongoDB string - in a variables.env file.
 
 Format 'DB=<your-connection-string>'
 

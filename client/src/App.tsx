@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import "./App.scss";
 import Swal from "sweetalert2/src/sweetalert2.js";
 
 import mobileShareImage from "./assets/images/mobile.svg";
