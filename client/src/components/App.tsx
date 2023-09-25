@@ -494,7 +494,7 @@ const App = () => {
           <section id="credits">
             <p>
               All design and implementation
-              <span>&copy; Oliver Harris, 2022 / 2023</span>
+              <span>&copy; Oliver Harris, 2022 / 2023!</span>
             </p>
           </section>
         </div>
