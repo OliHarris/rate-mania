@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2/src/sweetalert2.js";
 
 import Header from "./Header";
+import ArticleTitle from "./ArticleTitle";
 import UserStats from "./UserStats";
 import UserInput from "./UserInput";
 import WikiOutput from "./WikiOutput";
@@ -455,10 +456,10 @@ const App = () => {
             voteCounter={voteCounter}
             currentArticles={currentArticles}
           />
-          <section id="article-title">
-            {!loadingState && <h2>{articleTitle}</h2>}
-            {loadingState && <h2>Loading...</h2>}
-          </section>
+          <ArticleTitle
+            loadingState={loadingState}
+            articleTitle={articleTitle}
+          />
           <hr />
           <UserStats
             loadingState={loadingState}
