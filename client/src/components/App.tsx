@@ -200,7 +200,28 @@ const App = () => {
           }[] = [];
           const filtersArray = [
             "English-language television shows",
+            "Television shows adapted into video games",
+            "BBC Television shows",
+            "Black-and-white British television shows",
+            "British science fiction television shows",
+            "Television shows adapted into comics",
+            "Television shows adapted into films",
+            "Television shows adapted into novels",
+            "Television shows based on non-fiction books",
+            "American novels adapted into television shows",
+            "Television shows featuring audio description",
             "English-language films",
+            "2020s English-language films",
+            "2010s English-language films",
+            "2000s English-language films",
+            "1990s English-language films",
+            "1980s English-language films",
+            "1970s English-language films",
+            "1960s English-language films",
+            "1950s English-language films",
+            "1940s English-language films",
+            "1930s English-language films",
+            "1920s English-language films",
           ];
           const filtersString = filtersArray
             .map((filter) => "Category:" + filter)
@@ -211,7 +232,7 @@ const App = () => {
           const urlString = testPopularCategories
             ? "&cllimit=500"
             : `&clcategories=${encodeURIComponent(filtersString)}`;
-          let combinedCategoriesArray: { ns: number; title: string }[] = [];
+          let combinedCategoriesArray: { title: string }[] = [];
 
           let titleArray: string[] = [];
           // max 50, although 'extracts' start to cut out after 20
@@ -246,7 +267,7 @@ const App = () => {
                 .then((response) => {
                   const populateArticlesArray = (
                     value: {
-                      categories: { ns: number; title: string }[];
+                      categories: { title: string }[];
                       original: { source: string };
                       pageprops: { page_image: string };
                       extract: string;
@@ -331,7 +352,7 @@ const App = () => {
                   response.data.query.pages.forEach(
                     (
                       item: {
-                        categories: { ns: number; title: string }[];
+                        categories: { title: string }[];
                         original: { source: string };
                         pageprops: { page_image: string };
                         extract: string;
