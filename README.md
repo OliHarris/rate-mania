@@ -54,4 +54,6 @@ I then updated the custom domain details from Firebase, back to Google Domains D
 
 To deploy I manually run from the 'client' project directory:
 
+### `npm run build`
+
 ### `firebase deploy`
