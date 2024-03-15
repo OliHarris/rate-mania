@@ -34,7 +34,7 @@ const Header = ({
 
   // user share logic
   const handleShareButton = (type: string) => {
-    const shareUrl = "https://rate-mania.com";
+    const shareUrl = "https://rate-mania.web.app";
     const getShareText = () => {
       let shareText = `I voted "${lastVotedArticleTitle}" is ${lastVotedArticleType}!\n`;
       if (lastVotedArticleType === "underrated") {
