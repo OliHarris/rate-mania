@@ -44,7 +44,7 @@ const App = () => {
 
   const devSwitch = () => {
     return window.location.hostname === "localhost"
-      ? "https://ts1dtr9i4e.execute-api.eu-west-1.amazonaws.com/dev"
+      ? "https://k9i909fnm3.execute-api.eu-west-1.amazonaws.com/dev"
       : "https://vmi0yofalk.execute-api.eu-west-1.amazonaws.com/prod";
   };
 

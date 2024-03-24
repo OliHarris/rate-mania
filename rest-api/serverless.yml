@@ -2,12 +2,11 @@ service: rest-api
 
 provider:
   name: aws
-  runtime: nodejs14.x # set node.js runtime
+  runtime: nodejs20.x # set node.js runtime
   memorySize: 128 # set the maximum memory of the Lambdas in Megabytes
   timeout: 10 # the timeout is 10 seconds (default is 6 seconds)
-  stage: dev # setting the env stage to dev or prod, this will be visible in the routes
+  stage: prod # setting the env stage to dev or prod, this will be visible in the routes
   region: eu-west-1
-  lambdaHashingVersion: 20200924
 
 functions: # add 3 functions for CRUD
   create:

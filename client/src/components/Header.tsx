@@ -47,7 +47,7 @@ const Header = ({
 
     if (type === "mobile") {
       const shareData = {
-        title: "Check out Rate-Mania.com",
+        title: "Check out Rate-Mania",
         text: getShareText(),
         url: shareUrl,
       };
@@ -71,7 +71,7 @@ const Header = ({
   return (
     <header>
       <h1>
-        Welcome to<span>Rate-Mania.com</span>
+        Welcome to<span>Rate-Mania</span>
       </h1>
       <hr />
       {lastVotedArticleTitle && lastVotedArticleType && (
