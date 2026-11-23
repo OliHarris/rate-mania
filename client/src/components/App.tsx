@@ -268,6 +268,7 @@ const App = () => {
                     .get(
                       `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&redirects=1` +
                         `&prop=extracts|info|pageprops|pageimages|categories` +
+                        `&cllimit=max` + // <--- force full category list
                         `${urlString}` +
                         `&exintro=1&inprop=url&ppprop=page_image&piprop=original&titles=${encodeURIComponent(
                           titlesString
