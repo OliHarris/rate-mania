@@ -22,14 +22,25 @@ const WikiOutput = ({
       <section id="wiki-output" className="row">
         <div className="small-12 large-4 columns">
           {articleImage && (
-            <figure>
-              <img
-                onLoad={() => setImageLoaded(true)}
-                style={{ display: imageLoaded ? "inline-block" : "none" }}
-                src={articleImage}
-                alt={articleTitle}
-              />
-            </figure>
+            <>
+              {!imageLoaded && (
+                <div className="loader-frame">
+                  <div className="loader-center-horizontal">
+                    <div className="loader-center-vertical">
+                      <div className="loader"></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <figure>
+                <img
+                  onLoad={() => setImageLoaded(true)}
+                  style={{ display: imageLoaded ? "inline-block" : "none" }}
+                  src={articleImage}
+                  alt={articleTitle}
+                />
+              </figure>
+            </>
           )}
           {!articleImage && (
             <div>
