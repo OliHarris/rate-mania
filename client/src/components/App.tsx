@@ -30,6 +30,7 @@ const App = () => {
   const [articleFullUrl, setArticleFullUrl] = useState<string>("");
   const [articleKeyword, setArticleKeyword] = useState<string>("");
   const [articleImage, setArticleImage] = useState<string>("");
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
   const [userUnderrated, setUserUnderrated] = useState<number>(0);
   const [userOverrated, setUserOverrated] = useState<number>(0);
@@ -79,6 +80,7 @@ const App = () => {
       setArticleFullUrl("");
       setArticleKeyword("");
       setArticleImage("");
+      setImageLoaded(false);
 
       // only after user input (need to remove article from stack)
       if (keyword) {
@@ -206,12 +208,6 @@ const App = () => {
             // loop through years to generate dynamic matches
             for (let year = startYear; year <= endYear; year++) {
               categories.push(`Category:${year} English-language films`);
-              categories.push(
-                `Category:${year} British television series debuts`
-              );
-              categories.push(
-                `Category:${year} American television series debuts`
-              );
             }
             return categories.join("|");
           };
@@ -492,7 +488,11 @@ const App = () => {
           />
           <hr />
           <WikiOutput
+            key={articleId}
+            loadingState={loadingState}
             articleImage={articleImage}
+            imageLoaded={imageLoaded}
+            setImageLoaded={setImageLoaded}
             articleTitle={articleTitle}
             articleExtract={articleExtract}
             articleFullUrl={articleFullUrl}
@@ -501,7 +501,7 @@ const App = () => {
           <section id="credits">
             <p>
               All design and implementation
-              <span>&copy; Oliver Harris, 2022 / 2023</span>
+              <span>&copy; Oliver Harris, 2022 / 2023 / 2026</span>
             </p>
           </section>
         </div>

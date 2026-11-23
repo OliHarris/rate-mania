@@ -22,7 +22,7 @@ const Header = ({
   lastVotedArticleTitle,
   lastVotedArticleType,
   voteCounter,
-  currentArticles,
+  currentArticles
 }: HeaderInterface) => {
   const checkMobileDevice = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -49,7 +49,7 @@ const Header = ({
       const shareData = {
         title: "Check out Rate-Mania",
         text: getShareText(),
-        url: shareUrl,
+        url: shareUrl
       };
       navigator.share(shareData);
     } else if (type === "twitter") {
@@ -63,7 +63,7 @@ const Header = ({
         text: getShareText(),
         timer: 2000,
         timerProgressBar: true,
-        showConfirmButton: false,
+        showConfirmButton: false
       });
     }
   };
@@ -130,7 +130,7 @@ const Header = ({
       )}
       <div className="h5">
         You have voted on {voteCounter} out of today's remaining{" "}
-        {currentArticles.length} popular films and television shows.
+        {currentArticles.length} popular films.
       </div>
       <div className="h5">Article stack updated daily!</div>
       <hr />
