@@ -52,7 +52,7 @@ const App = () => {
     Swal.fire({
       icon: "error",
       title: "Something went wrong!",
-      text: "Please click OK to refresh the page, and start again",
+      text: "Please click OK to refresh the page, and start again"
     }).then(() => {
       // Reload the Page
       window.location.reload();
@@ -154,7 +154,7 @@ const App = () => {
         Swal.fire({
           icon: "success",
           title: "Congratulations! You made it to the end",
-          text: "Please click OK to start again",
+          text: "Please click OK to start again"
         }).then(() => {
           // Reload the Page
           window.location.reload();
@@ -177,7 +177,7 @@ const App = () => {
         weekday: undefined,
         year: "numeric",
         month: "2-digit",
-        day: "2-digit",
+        day: "2-digit"
       };
       const englishDate = date.toLocaleDateString("en-GB", options);
       const day = englishDate.split("/")[0];
@@ -196,39 +196,28 @@ const App = () => {
             const totalEmptyEntries = 1000 - responseArray.length;
             for (let i = 0; i < totalEmptyEntries; i++) {
               responseArray.push({
-                article: undefined,
+                article: undefined
               });
             }
           }
 
-          const filtersArray = [
-            "English-language television shows",
-            "Television shows adapted into video games",
-            "BBC Television shows",
-            "Black-and-white British television shows",
-            "British science fiction television shows",
-            "Television shows adapted into comics",
-            "Television shows adapted into films",
-            "Television shows adapted into novels",
-            "Television shows based on non-fiction books",
-            "American novels adapted into television shows",
-            "Television shows featuring audio description",
-            "English-language films",
-            "2020s English-language films",
-            "2010s English-language films",
-            "2000s English-language films",
-            "1990s English-language films",
-            "1980s English-language films",
-            "1970s English-language films",
-            "1960s English-language films",
-            "1950s English-language films",
-            "1940s English-language films",
-            "1930s English-language films",
-            "1920s English-language films",
-          ];
-          const filtersString = filtersArray
-            .map((filter) => "Category:" + filter)
-            .join("|");
+          const buildFiltersString = (startYear: number, endYear: number) => {
+            const categories: string[] = [];
+            // loop through years to generate dynamic matches
+            for (let year = startYear; year <= endYear; year++) {
+              categories.push(`Category:${year} English-language films`);
+              categories.push(
+                `Category:${year} British television series debuts`
+              );
+              categories.push(
+                `Category:${year} American television series debuts`
+              );
+            }
+            return categories.join("|");
+          };
+          // generate latest ten years data
+          const thisYear = new Date().getFullYear();
+          const filtersString = buildFiltersString(thisYear - 10, thisYear);
 
           // test popular categories output?
           const testPopularCategories = false;
@@ -268,8 +257,6 @@ const App = () => {
                     .get(
                       `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&redirects=1` +
                         `&prop=extracts|info|pageprops|pageimages|categories` +
-                        `&cllimit=max` + // <-- force full category list
-                        `&exlimit=max` + // <-- stop extracts choking batch
                         `${urlString}` +
                         `&exintro=1&inprop=url&ppprop=page_image&piprop=original&titles=${encodeURIComponent(
                           titlesString
@@ -293,7 +280,7 @@ const App = () => {
                             if (testPopularCategories) {
                               combinedCategoriesArray = [
                                 ...combinedCategoriesArray,
-                                ...value.categories,
+                                ...value.categories
                               ];
                             }
 
@@ -314,7 +301,7 @@ const App = () => {
                                 extract: value.extract,
                                 fullurl: value.fullurl,
                                 keyword: value.fullurl.split("/").pop()!,
-                                image: image,
+                                image: image
                               });
                             };
 
@@ -431,7 +418,7 @@ const App = () => {
                         categoryMap,
                         ([name, value]) => ({
                           name,
-                          value,
+                          value
                         })
                       );
                       array.sort((a, b) => {
