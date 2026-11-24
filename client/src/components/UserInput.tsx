@@ -30,8 +30,6 @@ interface UserInputInterface {
     title: string;
   }[];
   articleKeyword: string;
-  userUnderrated: number;
-  userOverrated: number;
   loadingState: boolean;
 }
 
@@ -46,8 +44,6 @@ const UserInput = ({
   getRandomArticle,
   currentArticles,
   articleKeyword,
-  userUnderrated,
-  userOverrated,
   loadingState,
 }: UserInputInterface) => {
   // user vote logic
@@ -56,22 +52,12 @@ const UserInput = ({
 
     if (!dbEntryExists) {
       // add a new entry to the database
-      let newRecord;
-      if (type === "underrated") {
-        newRecord = {
-          article_id: articleId,
-          article_title: articleTitle,
-          underrated: 1,
-          overrated: 0,
-        };
-      } else if (type === "overrated") {
-        newRecord = {
-          article_id: articleId,
-          article_title: articleTitle,
-          underrated: 0,
-          overrated: 1,
-        };
-      }
+      // the server sets the starting counts from the vote type
+      const newRecord = {
+        article_id: articleId,
+        article_title: articleTitle,
+        vote: type,
+      };
       // will need to POST to MongoDB (create)
       axios
         .post(`${devSwitch()}/articles`, newRecord)
@@ -91,22 +77,8 @@ const UserInput = ({
         });
     } else {
       // update entry in the database
-      let updateRecord;
-      if (type === "underrated") {
-        updateRecord = {
-          article_id: articleId,
-          article_title: articleTitle,
-          underrated: userUnderrated + 1,
-          overrated: userOverrated,
-        };
-      } else if (type === "overrated") {
-        updateRecord = {
-          article_id: articleId,
-          article_title: articleTitle,
-          underrated: userUnderrated,
-          overrated: userOverrated + 1,
-        };
-      }
+      // send only the vote type, the server adds 1 to that count
+      const updateRecord = { vote: type };
       // will need to PUT to MongoDB (update)
       axios
         .put(`${devSwitch()}/articles/${articleId}`, updateRecord)

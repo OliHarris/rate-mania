@@ -32,8 +32,6 @@ const App = () => {
   const [articleImage, setArticleImage] = useState<string>("");
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
-  const [userUnderrated, setUserUnderrated] = useState<number>(0);
-  const [userOverrated, setUserOverrated] = useState<number>(0);
   const [userTotalVotes, setUserTotalVotes] = useState<number>(0);
   const [userUnderratedPercentage, setUserUnderratedPercentage] =
     useState<number>(0);
@@ -111,13 +109,11 @@ const App = () => {
                 // if article in DB
                 setDbEntryExists(true);
                 setUserTotalVotes(dbArticle.underrated + dbArticle.overrated);
-                setUserUnderrated(dbArticle.underrated);
                 setUserUnderratedPercentage(
                   (dbArticle.underrated /
                     (dbArticle.underrated + dbArticle.overrated)) *
                     100
                 );
-                setUserOverrated(dbArticle.overrated);
                 setUserOverratedPercentage(
                   (dbArticle.overrated /
                     (dbArticle.underrated + dbArticle.overrated)) *
@@ -127,9 +123,7 @@ const App = () => {
                 // if no article in DB
                 setDbEntryExists(false);
                 setUserTotalVotes(0);
-                setUserUnderrated(0);
                 setUserUnderratedPercentage(0);
-                setUserOverrated(0);
                 setUserOverratedPercentage(0);
               }
 
@@ -445,8 +439,6 @@ const App = () => {
             getRandomArticle={getRandomArticle}
             currentArticles={currentArticles}
             articleKeyword={articleKeyword}
-            userUnderrated={userUnderrated}
-            userOverrated={userOverrated}
             loadingState={loadingState}
           />
           <hr />

@@ -344,8 +344,7 @@ describe("App", () => {
       expect(mockedAxios.post).toHaveBeenCalledWith(`${DEV_API}/articles`, {
         article_id: 102,
         article_title: "Barbie",
-        underrated: 1,
-        overrated: 0
+        vote: "underrated"
       });
       await waitForArticle("Dune");
       expect(screen.getByText(counterText(1, 1))).toBeInTheDocument();
@@ -364,10 +363,7 @@ describe("App", () => {
       await user.click(screen.getByRole("button", { name: "Vote Overrated" }));
 
       expect(mockedAxios.put).toHaveBeenCalledWith(`${DEV_API}/articles/101`, {
-        article_id: 101,
-        article_title: "Dune",
-        underrated: 3,
-        overrated: 2
+        vote: "overrated"
       });
       await waitForArticle("Barbie");
       expect(screen.getByText(counterText(1, 2))).toBeInTheDocument();

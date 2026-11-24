@@ -39,14 +39,17 @@ The `rest-api/` folder is a **Serverless Framework** project deployed to **AWS L
 | Method | Route | Lambda | Purpose |
 |---|---|---|---|
 | `GET` | `/articles/{id}` | `getOne` | Get the vote counts for a film |
-| `POST` | `/articles` | `create` | Create a record for a film's first vote |
-| `PUT` | `/articles/{id}` | `update` | Update the vote counts |
+| `POST` | `/articles` | `create` | Create a record for a film's first vote: `{ article_id, article_title, vote }` |
+| `PUT` | `/articles/{id}` | `update` | Add one vote: `{ vote: "underrated" \| "overrated" }` |
+
+- **Clients send votes, not vote counts**: a request can only say which way it's voting. The server sets a new film's starting counts itself and adds to existing ones with MongoDB's `$inc`, so nobody can send `{ "underrated": 999999 }` or change a film's title with a hand-made request. Anything else gets a `400`, IDs must be whole numbers, and error responses only include a short message, with the details logged to CloudWatch.
 
 - **MongoDB** accessed through **Mongoose**, with a small `Article` schema (`article_id`, `article_title`, `underrated`, `overrated`).
 - **Reuses the database connection between calls**: the connection is cached outside the handler, and `callbackWaitsForEmptyEventLoop = false` lets a warm Lambda keep it open instead of reconnecting on every request.
 - **CORS depends on the stage**: open (`*`) on `dev`, and locked to the production domain on `prod`.
 - **Separate dev and prod stages**: the client picks the matching API automatically (dev on `localhost`, prod everywhere else).
 - `serverless-offline` is set up so the API can be run locally.
+- Small handler tests (`npm test` in `rest-api/`) use Node's built-in test runner with a fake database, and check that bad requests are rejected before reaching MongoDB.
 
 ### Hosting
 
@@ -134,8 +137,8 @@ firebase deploy
 
 I wrote this from scratch while learning, and looking at it again I can see plenty I'd do differently. This is my roadmap, in order of priority:
 
-### 1. Count votes on the server
-Right now the client sends the **new totals** (for example `underrated: 5`), and the API saves whatever it receives. If two people vote at the same moment, one vote can be lost, and anyone could send made-up numbers. The fix is for the client to send only the vote direction and for the server to add to the count itself with MongoDB's `$inc` (with `upsert`). That also removes the need for separate create and update calls.
+### 1. One vote endpoint with `upsert`
+Votes are already counted on the server (the client sends only the vote direction). The next step is a single endpoint that uses `$inc` with `upsert`, so the first vote and later votes go through the same call. That removes the separate create and update requests, and stops two people casting the first vote on a film at the same moment from creating two records.
 
 ### 2. Split `App.tsx` into a data layer and a custom hook
 `App` currently holds the whole Wikipedia process in one large `useEffect`, using nested promises and hand-kept counters. I'd move it into a `services/wikipedia.ts` module and a `useArticles()` hook, written with `async`/`await`, splitting the titles into batches and waiting for them with `Promise.all`. That makes the selection and filtering logic plain functions that can be unit-tested, and cuts `App` down to putting the components together.
@@ -159,7 +162,7 @@ Every visit currently makes 50+ Wikipedia requests to build a list that only cha
 - Clean Wikipedia's HTML with DOMPurify before rendering it, and add `rel="noopener noreferrer"` to links that open in a new tab.
 - Import SweetAlert2 the standard way, list it as a runtime dependency, and upgrade Axios.
 - Remove leftover `console.log` calls and outdated comments.
-- Add tests to the REST API, and tidy up the repeated CORS and response code in its handlers.
+- Tidy up the repeated CORS and response code in the REST API's handlers.
 
 ---
 

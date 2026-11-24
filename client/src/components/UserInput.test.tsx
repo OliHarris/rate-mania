@@ -25,8 +25,6 @@ const makeProps = () => ({
   getRandomArticle: jest.fn(),
   currentArticles: articles,
   articleKeyword: "Dune",
-  userUnderrated: 4,
-  userOverrated: 6,
   loadingState: false
 });
 
@@ -78,11 +76,11 @@ describe("UserInput", () => {
 
   describe("voting on a new article (no DB entry)", () => {
     it.each([
-      ["underrated", "Vote Underrated", { underrated: 1, overrated: 0 }],
-      ["overrated", "Vote Overrated", { underrated: 0, overrated: 1 }]
+      ["underrated", "Vote Underrated"],
+      ["overrated", "Vote Overrated"]
     ])(
-      "POSTs a new %s record and loads the next article",
-      async (type, label, counts) => {
+      "POSTs a new record with a %s vote and loads the next article",
+      async (type, label) => {
         mockedAxios.post.mockResolvedValue({ data: {} });
         const user = userEvent.setup();
         const props = renderUserInput();
@@ -93,7 +91,7 @@ describe("UserInput", () => {
         expect(mockedAxios.post).toHaveBeenCalledWith(`${API}/articles`, {
           article_id: 42,
           article_title: "Dune",
-          ...counts
+          vote: type
         });
         await waitFor(() =>
           expect(props.getRandomArticle).toHaveBeenCalledWith(
@@ -129,11 +127,11 @@ describe("UserInput", () => {
 
   describe("voting on an existing article (DB entry exists)", () => {
     it.each([
-      ["underrated", "Vote Underrated", { underrated: 5, overrated: 6 }],
-      ["overrated", "Vote Overrated", { underrated: 4, overrated: 7 }]
+      ["underrated", "Vote Underrated"],
+      ["overrated", "Vote Overrated"]
     ])(
-      "PUTs an incremented %s count and loads the next article",
-      async (type, label, counts) => {
+      "PUTs only the %s vote type and loads the next article",
+      async (type, label) => {
         mockedAxios.put.mockResolvedValue({ data: {} });
         const user = userEvent.setup();
         const props = renderUserInput({ dbEntryExists: true });
@@ -141,9 +139,7 @@ describe("UserInput", () => {
         await user.click(screen.getByRole("button", { name: label }));
 
         expect(mockedAxios.put).toHaveBeenCalledWith(`${API}/articles/42`, {
-          article_id: 42,
-          article_title: "Dune",
-          ...counts
+          vote: type
         });
         await waitFor(() =>
           expect(props.getRandomArticle).toHaveBeenCalledWith(
