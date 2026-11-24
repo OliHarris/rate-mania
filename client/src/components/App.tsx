@@ -215,12 +215,7 @@ const App = () => {
           const thisYear = new Date().getFullYear();
           const filtersString = buildFiltersString(thisYear - 10, thisYear);
 
-          // test popular categories output?
-          const testPopularCategories = false;
-          const urlString = testPopularCategories
-            ? "&cllimit=500"
-            : `&clcategories=${encodeURIComponent(filtersString)}`;
-          let combinedCategoriesArray: { title: string }[] = [];
+          const urlString = `&clcategories=${encodeURIComponent(filtersString)}`;
 
           const articlesArray: {
             extract: string;
@@ -272,14 +267,6 @@ const App = () => {
                       }) => {
                         return new Promise<void>((resolve2) => {
                           if (value.categories) {
-                            // if review popular categories output...
-                            if (testPopularCategories) {
-                              combinedCategoriesArray = [
-                                ...combinedCategoriesArray,
-                                ...value.categories
-                              ];
-                            }
-
                             const pushArticleData = (
                               value: {
                                 extract: string;
@@ -399,30 +386,6 @@ const App = () => {
                   // callback
                   const totalItemsProcessed = itemsProcessed * apiThreshold;
                   if (totalItemsProcessed === array.length) {
-                    // if review popular categories output...
-                    if (testPopularCategories) {
-                      const categoryMap = combinedCategoriesArray.reduce(
-                        (category, val) => {
-                          return category.set(
-                            val.title,
-                            1 + (category.get(val.title) || 0)
-                          );
-                        },
-                        new Map()
-                      );
-                      const array = Array.from(
-                        categoryMap,
-                        ([name, value]) => ({
-                          name,
-                          value
-                        })
-                      );
-                      array.sort((a, b) => {
-                        return b.value - a.value;
-                      });
-                      console.log(array);
-                    }
-
                     getRandomArticle(articlesArray, null!, null!);
                     setCurrentArticles(articlesArray);
                   }
