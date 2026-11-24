@@ -242,6 +242,19 @@ describe("App", () => {
       await waitFor(() => expect(location.reload).toHaveBeenCalled());
     });
 
+    it("shows an error alert and reloads if Wikimedia fails with no response (e.g. network error)", async () => {
+      const api = mockWikiApi({ films, db });
+      api.overrides.topArticles = () => Promise.reject(new Error("Network Error"));
+      render(<App />);
+
+      await waitFor(() =>
+        expect(Swal.fire).toHaveBeenCalledWith(
+          expect.objectContaining({ icon: "error", title: "Something went wrong!" })
+        )
+      );
+      await waitFor(() => expect(location.reload).toHaveBeenCalled());
+    });
+
     it("shows an error alert if a Wikipedia batch request fails", async () => {
       const api = mockWikiApi({ films, db });
       api.overrides.wikiBatch = () => Promise.reject(httpError(500));
@@ -300,6 +313,21 @@ describe("App", () => {
         )
       );
       await waitFor(() => expect(location.reload).toHaveBeenCalled());
+    });
+
+    it("shows an error alert and reloads if the DB lookup fails with no response", async () => {
+      const api = mockWikiApi({ films, db });
+      api.overrides.db = () => Promise.reject(new Error("Network Error"));
+      render(<App />);
+
+      await waitFor(() =>
+        expect(Swal.fire).toHaveBeenCalledWith(
+          expect.objectContaining({ icon: "error", title: "Something went wrong!" })
+        )
+      );
+      await waitFor(() => expect(location.reload).toHaveBeenCalled());
+      // No retry loop: a missing response is not treated as a 500.
+      expect(getCalls().filter((u) => u.endsWith("/articles/101"))).toHaveLength(1);
     });
   });
 

@@ -144,7 +144,7 @@ const App = () => {
             .catch((error) => {
               console.log(error);
               // AWS special error handling - try again if 500
-              if (error.response.status === 500) {
+              if (error.response?.status === 500) {
                 getAllUserData();
               } else {
                 errorAlert();
@@ -396,7 +396,7 @@ const App = () => {
         .catch((error) => {
           console.log(error);
           // Wikipedia special error handling - try again with another day rewound if 404
-          if (error.response.status === 404) {
+          if (error.response?.status === 404) {
             const dateInstance = new Date();
             // extract date from two days ago
             dateInstance.setDate(dateInstance.getDate() - 2);
