@@ -81,7 +81,7 @@ The `rest-api/` folder is a **Serverless Framework** project deployed to **AWS L
 
 ## Running it locally
 
-For how the client, REST API, AWS and MongoDB connect, see [docs/architecture.md](docs/architecture.md).
+For how the client, REST API, AWS and MongoDB connect, see [docs/architecture.md](docs/architecture.md). My original development notes, the earlier version of this README, are kept in [docs/development-notes.md](docs/development-notes.md).
 
 ### Client
 
