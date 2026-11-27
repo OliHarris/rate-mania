@@ -6,6 +6,20 @@ Rate-Mania shows you films that are trending on Wikipedia today and asks one que
 
 I designed, built, tested and deployed it myself as a full-stack project. The first version was built in one week (28/12/21 – 04/01/22) to see how far I could get with a little time off. I've kept improving it since.
 
+### Authorship
+
+I designed and built Rate-Mania myself: the React and TypeScript app, the process that builds the daily film list from Wikipedia, the UI and sharing features, the serverless API on AWS with MongoDB, and the Firebase hosting.
+
+In November 2026 I used Claude (Anthropic's AI coding assistant) to help prepare the project for my portfolio. Claude's contributions are limited to:
+
+- **The Jest test suite and the REST API handler tests**, written from my code.
+- **Documentation:** this README's layout, [docs/architecture.md](docs/architecture.md), and the link-preview share card.
+- **Two fixes I asked for:**
+  - the app no longer hangs on "Loading..." when a request gets no response
+  - the API accepts single votes only (`{ vote }`) and checks every request, instead of trusting vote counts sent by the client
+
+All of Claude's commits are tagged `Co-Authored-By: Claude` and can be listed with `git log --grep "Co-Authored-By: Claude"`. Everything else in the history is mine.
+
 ---
 
 ## What I built
@@ -66,7 +80,7 @@ The `rest-api/` folder is a **Serverless Framework** project deployed to **AWS L
 - Component tests cover rendering and interaction: loading states, share buttons on mobile vs. desktop, button disabling, and the requests sent for each vote type.
 - Tests sit next to their components (`Header.tsx` next to `Header.test.tsx`), with shared test data in `src/test/fixtures/`.
 
-> **A note on authorship:** the application code is my own work. The Jest test suite was written by Claude (Anthropic's AI coding assistant), working from my code. I've read through it and understand how it's put together, and I maintain and extend it as the app changes. While writing the tests, Claude also found a real bug: a request that failed with no response left the app stuck on "Loading...". That's now fixed and covered by tests.
+> **Written by Claude** (see [Authorship](#authorship)). I've read the suite, understand how it's put together, and maintain it as the app changes. While writing it, Claude found a real bug: a request that failed with no response left the app stuck on "Loading...". That's now fixed and covered by tests.
 
 ---
 
